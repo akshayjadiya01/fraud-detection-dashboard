@@ -33,11 +33,12 @@ This project demonstrates **data analysis, SQL integration, advanced visualizati
 ## 📂 Screenshots
 
 ### Dashboard Overview
-!<img width="1770" height="707" alt="dashboard_overview" src="https://github.com/user-attachments/assets/b83e6b3d-15c4-46b2-b36a-a603a3dc5f8a" />
+<img width="1770" height="707" alt="dashboard_overview" src="https://github.com/user-attachments/assets/b83e6b3d-15c4-46b2-b36a-a603a3dc5f8a" />
 
 
 ### Fraud Trends Over Time
-![Fraud Trends](screenshots/fraud_trends.png)
+<img width="1750" height="519" alt="fraud_trends" src="https://github.com/user-attachments/assets/a05c0be7-c28a-47a0-adc5-bf00a18d13e7" />
+
 
 ### Fraud by Type & Loss
 ![Fraud Type & Loss](screenshots/fraud_type_loss.png)
