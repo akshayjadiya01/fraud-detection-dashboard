@@ -30,16 +30,16 @@ This project is perfect for data analysts and enthusiasts looking to showcase sk
 
 ## 📂 **Screenshots**
 
-### Fraud Trends Overview
+### Fraud Trends Overview  
 ![Fraud Trends](screenshots/trends.png)
 
-### Daily Patterns
+### Daily Patterns  
 ![Daily Patterns](screenshots/daily.png)
 
-### Fraud Prediction
+### Fraud Prediction  
 ![Prediction Page](screenshots/prediction.png)
 
-> _Note: Add your screenshots by placing them in a `screenshots/` folder or use hosted image URLs._
+> _Note: Add your screenshots by placing them in a `screenshots/` folder or by using hosted image URLs._
 
 ---
 
@@ -50,11 +50,18 @@ This project is perfect for data analysts and enthusiasts looking to showcase sk
 git clone https://github.com/USERNAME/fraud-detection-dashboard.git
 cd fraud-detection-dashboard
 
+```
+### 2️⃣ Create a virtual environment and install dependencies
+```bash
 python -m venv venv
-venv\Scripts\activate  # On Windows
+venv\Scripts\activate    # On Windows
 # OR
-source venv/bin/activate  # On Mac/Linux
+source venv/bin/activate # On Mac/Linux
 
 pip install -r requirements.txt
+```
 
+### 2️⃣ Create a virtual environment and install dependencies
+```bash
 streamlit run fraud_dashboard.py
+```
