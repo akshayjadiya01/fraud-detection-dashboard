@@ -47,7 +47,7 @@ This project is perfect for data analysts and enthusiasts looking to showcase sk
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/USERNAME/fraud-detection-dashboard.git
+git clone https://github.com/akshayjadiya01/fraud-detection-dashboard.git
 cd fraud-detection-dashboard
 
 ```
