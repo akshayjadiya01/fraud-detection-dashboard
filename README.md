@@ -1,4 +1,4 @@
-# 🚨 Fraud Detection Dashboard
+<img width="1770" height="707" alt="image" src="https://github.com/user-attachments/assets/57c60d4b-abbe-4146-943a-cd96dbef415d" /># 🚨 Fraud Detection Dashboard
 
 ![Streamlit](https://img.shields.io/badge/Made_with-Streamlit-green) ![Python](https://img.shields.io/badge/Made_with-Python-blue) ![XGBoost](https://img.shields.io/badge/ML-XGBoost-orange) ![SQLite](https://img.shields.io/badge/Database-SQLite-lightgrey)
 
@@ -29,6 +29,10 @@ This project is perfect for data analysts and enthusiasts looking to showcase sk
 ---
 
 ## 📂 **Screenshots**
+
+### 1️⃣ Dashboard Overview
+!<img width="1770" height="707" alt="Screenshot 2025-09-09 131023" src="https://github.com/user-attachments/assets/0eddefc8-bf3a-41be-89a2-b183b2fefcad" />
+
 
 ### Fraud Trends Overview  
 ![Fraud Trends](screenshots/trends.png)
