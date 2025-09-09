@@ -41,20 +41,22 @@ This project demonstrates **data analysis, SQL integration, advanced visualizati
 
 
 ### Fraud by Type & Loss
-![Fraud Type & Loss](screenshots/fraud_type_loss.png)
+<img width="1382" height="547" alt="Fraud by Type   Loss" src="https://github.com/user-attachments/assets/facdbf22-b0e4-4e27-8995-3c70e6aedd0a" />
+
 
 ### Top Fraudulent Senders
-![Top Fraudulent Senders](screenshots/top_senders.png)
+<img width="1311" height="556" alt="Top Fraudulent Senders" src="https://github.com/user-attachments/assets/2167188b-3f3d-4158-b19d-9d64b6e63933" />
+
 
 ### Prediction Tab
-![Prediction Tab](screenshots/prediction_tab.png)
+<img width="1857" height="885" alt="Prediction Tab" src="https://github.com/user-attachments/assets/3e2285b8-f27c-45a8-be8c-d880b6d12a6c" />
+
 
 ### Help / Instructions Tab
-![Help Tab](screenshots/help_tab.png)
+<img width="1372" height="626" alt="help_tab" src="https://github.com/user-attachments/assets/ae306764-6f79-4743-a4af-ecb1740b3e7c" />
 
-> _Tip: Place all screenshots in a `screenshots/` folder for easy linking._  
 
----
+
 
 ## 🚀 How to Run
 
