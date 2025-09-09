@@ -29,11 +29,10 @@ def load_view(query):
 @st.cache_data
 def get_data():
     df_type = load_view("SELECT type, COUNT(*) AS count, SUM(amount) AS total_loss FROM transactions WHERE isFraud=1 GROUP BY type;")
-    df_daily = load_view("SELECT step, COUNT(*) AS count, SUM(amount) AS total_loss FROM transactions WHERE isFraud=1 GROUP BY step;")
     df_top = load_view("SELECT nameOrig AS sender, COUNT(*) AS count, SUM(amount) AS total_loss FROM transactions WHERE isFraud=1 GROUP BY nameOrig ORDER BY total_loss DESC LIMIT 10;")
     df_loss = load_view("SELECT type, SUM(amount) AS total_loss FROM transactions WHERE isFraud=1 GROUP BY type;")
     df_full = load_view("SELECT * FROM transactions LIMIT 50000;")  # Sample dataset for cloud
-    return df_type, df_daily, df_top, df_loss, df_full
+    return df_type, df_top, df_loss, df_full
 
 # ---------- Visualization Functions ----------
 def plot_fraud_by_type(df_type):
@@ -42,11 +41,34 @@ def plot_fraud_by_type(df_type):
     fig.update_layout(template="plotly_dark")
     st.plotly_chart(fig, use_container_width=True)
 
-def plot_daily_trends(df_daily):
+def plot_daily_trends(df_full):
     st.subheader("📈 Fraud Trends Over Time")
-    fig = px.line(df_daily, x="step", y="count", title="Daily Fraudulent Transactions")
-    fig.update_traces(mode="lines+markers")
-    fig.update_layout(template="plotly_dark")
+
+    # Aggregate by day
+    df_daily = df_full[df_full['isFraud'] == 1].copy()
+    df_daily['day'] = df_daily['step'] // 24
+    df_daily_agg = df_daily.groupby('day').agg(
+        count=('isFraud', 'count'),
+        total_loss=('amount', 'sum')
+    ).reset_index()
+
+    # Dual-axis chart
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df_daily_agg['day'], y=df_daily_agg['count'],
+                             mode='lines+markers', name='Fraud Count', line=dict(color='orange')))
+    fig.add_trace(go.Bar(x=df_daily_agg['day'], y=df_daily_agg['total_loss'],
+                         name='Total Loss', opacity=0.5, marker_color='red', yaxis='y2'))
+
+    # Layout
+    fig.update_layout(
+        template='plotly_dark',
+        title='Fraud Count & Total Loss Over Days',
+        xaxis_title='Day',
+        yaxis=dict(title='Fraud Count'),
+        yaxis2=dict(title='Total Loss', overlaying='y', side='right'),
+        legend=dict(y=0.95, x=0.01)
+    )
+
     st.plotly_chart(fig, use_container_width=True)
 
 def plot_loss_by_type(df_loss):
@@ -137,11 +159,11 @@ st.markdown("Analyze fraud patterns & predict fraudulent transactions.")
 
 tabs = st.tabs(["📊 Dashboard", "🔮 Prediction", "📖 Help"])
 
-df_type, df_daily, df_top, df_loss, df_full = get_data()
+df_type, df_top, df_loss, df_full = get_data()
 
 with tabs[0]:
     plot_fraud_by_type(df_type)
-    plot_daily_trends(df_daily)
+    plot_daily_trends(df_full)
     plot_loss_by_type(df_loss)
     plot_top_senders(df_top)
 
