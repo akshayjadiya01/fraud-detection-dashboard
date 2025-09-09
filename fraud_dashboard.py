@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import sqlite3
 import plotly.express as px
+import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
@@ -64,28 +65,37 @@ def get_data():
     return df_type, df_daily, df_top, df_loss, df_full
 
 def plot_fraud_by_type(df_type):
-    st.subheader("Fraud Distribution by Transaction Type")
-    fig = px.bar(df_type, x="type", y="count", color="type", title="Fraud Count per Type")
+    st.subheader("📊 Fraud Distribution by Transaction Type")
+    fig = px.bar(df_type, x="type", y="count", color="type", title="Fraud Count per Type",
+                 labels={"count": "Number of Frauds", "type": "Transaction Type"})
+    fig.update_layout(template="plotly_dark")
     st.plotly_chart(fig, use_container_width=True)
 
 def plot_daily_trends(df_daily):
-    st.subheader("Daily Fraud Trends")
-    fig = px.line(df_daily, x="step", y="count", title="Daily Fraudulent Transactions")
+    st.subheader("📈 Daily Fraud Trends")
+    fig = px.line(df_daily, x="step", y="count", title="Fraudulent Transactions Over Time",
+                  labels={"step": "Time Step", "count": "Fraud Count"})
+    fig.update_layout(template="plotly_dark")
     st.plotly_chart(fig, use_container_width=True)
 
 def plot_loss_by_type(df_loss):
-    st.subheader("Fraud Loss Analysis")
-    fig = px.pie(df_loss, names="type", values="total_loss", title="Fraud Loss by Transaction Type")
+    st.subheader("💰 Fraud Loss by Type")
+    fig = px.pie(df_loss, names="type", values="total_loss", title="Total Fraud Loss Distribution",
+                 labels={"type": "Transaction Type", "total_loss": "Total Loss"})
+    fig.update_traces(textposition="inside", textinfo="percent+label")
+    fig.update_layout(template="plotly_dark")
     st.plotly_chart(fig, use_container_width=True)
 
 def plot_top_senders(df_top):
-    st.subheader("Top Fraudulent Senders")
-    fig = px.bar(df_top, x="sender", y="total_loss", color="total_loss", title="Top 10 Fraudulent Senders")
+    st.subheader("🚨 Top Fraudulent Senders")
+    fig = px.bar(df_top, x="sender", y="total_loss", color="total_loss",
+                 title="Top 10 Fraudulent Senders by Total Loss", labels={"sender": "Sender", "total_loss": "Total Loss"})
+    fig.update_layout(template="plotly_dark")
     st.plotly_chart(fig, use_container_width=True)
 
 def run_prediction(df_full):
-    st.header("Fraud Prediction")
-    st.markdown("Use the model below to predict fraudulent transactions and analyze key factors influencing fraud.")
+    st.header("🔮 Fraud Prediction")
+    st.markdown("Train and evaluate a fraud detection model. Explore which features are most impactful.")
 
     X = df_full.drop(columns=["isFraud"])
     y = df_full["isFraud"]
@@ -99,55 +109,71 @@ def run_prediction(df_full):
     y_pred = model.predict(X_test)
     auc = roc_auc_score(y_test, y_pred)
 
-    st.success(f"Model trained! ROC AUC Score: {auc:.4f}")
+    st.success(f"✅ Model Trained Successfully! ROC AUC Score: {auc:.4f}")
 
     importance = model.feature_importances_
     features = X_encoded.columns
     fi_df = pd.DataFrame({"Feature": features, "Importance": importance}).sort_values(by="Importance", ascending=False).head(10)
 
-    st.subheader("Top Features Impacting Fraud")
+    st.subheader("📌 Top Features Impacting Fraud")
     st.dataframe(fi_df)
 
-    fig, ax = plt.subplots()
-    ax.barh(fi_df["Feature"], fi_df["Importance"])
-    ax.set_title("Feature Importance")
-    st.pyplot(fig)
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        y=fi_df["Feature"],
+        x=fi_df["Importance"],
+        orientation='h',
+        marker=dict(color='orange')
+    ))
+    fig.update_layout(title="Feature Importance", template="plotly_dark")
+    st.plotly_chart(fig, use_container_width=True)
 
 # ---------- Main App ----------
 
 st.title("🚨 Fraud Detection Dashboard")
-st.markdown("Explore fraud patterns, visualize data insights, and predict fraudulent transactions with advanced tools.")
+st.markdown("Analyze fraud patterns, visualize insights, and predict fraudulent activities with advanced tools.")
 
-# Sidebar navigation
-page = st.sidebar.radio("Navigate", ["Dashboard 📊", "Prediction 🔮", "Help 📖"])
+# Sidebar Navigation
+with st.sidebar:
+    st.markdown("### Navigation")
+    page = st.radio("Go to", ["📊 Dashboard", "🔮 Prediction", "📖 Help"], index=0)
 
+# Load Data
 df_type, df_daily, df_top, df_loss, df_full = get_data()
 
-if page == "Dashboard 📊":
+# Pages
+if page == "📊 Dashboard":
     st.header("Dashboard Overview")
     plot_fraud_by_type(df_type)
     plot_daily_trends(df_daily)
     plot_loss_by_type(df_loss)
     plot_top_senders(df_top)
 
-elif page == "Prediction 🔮":
+elif page == "🔮 Prediction":
     run_prediction(df_full)
 
-elif page == "Help 📖":
-    st.header("Help & Guide")
+elif page == "📖 Help":
+    st.header("📖 Help & Instructions")
     st.markdown("""
-    ### How to Use the Dashboard
-    - **Dashboard**: Visualize fraud data trends with interactive charts.
-    - **Prediction**: Run a machine learning model to predict fraud and view important features.
-    - **Help**: Learn how the app works and get guidance.
+    Welcome to the Fraud Detection Dashboard!
 
-    ### Notes
-    - The database views are created automatically on startup.
-    - Machine learning is powered by XGBoost, with ROC AUC for evaluation.
-    - The UI is designed to be intuitive, clean, and responsive.
+    **Dashboard**  
+    View interactive charts analyzing fraud by transaction type, daily trends, losses, and top senders.
+
+    **Prediction**  
+    Train an XGBoost model to predict fraudulent transactions and explore feature importance.
+
+    **Help**  
+    Guidance on how to use the dashboard and interpret results.
+
+    **Notes**  
+    - Data is from PaySim sample transactions.  
+    - The app uses SQLite for data storage and XGBoost for machine learning.  
+    - Visualizations are powered by Plotly for smooth interaction.
+
+    Explore, learn, and showcase your data analytics skills!
     """)
 
 # Footer
 st.markdown("---")
-st.write("Built with ❤️ by Akshay using Streamlit, XGBoost, and SQLite.")
-
+st.write("Built with ❤️ by Akshay using Streamlit, Plotly, XGBoost, and SQLite.")
