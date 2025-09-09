@@ -28,7 +28,7 @@ h2 { color: #34495E; }
 # ==============================
 # Database connection
 # ==============================
-DB_PATH = "fraud_paysim.db"
+DB_PATH = "fraud_paysim_sample.db"
 conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 
 def load_view(query):
@@ -257,3 +257,4 @@ with st.expander("ℹ️ Help / Documentation"):
 # ==============================
 st.markdown("---")
 st.markdown("Built with ❤️ using **Streamlit**, **Plotly**, **SQLite**, **XGBoost**, and **Python**")
+
