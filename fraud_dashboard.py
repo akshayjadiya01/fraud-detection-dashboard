@@ -9,15 +9,17 @@ from sklearn.metrics import roc_auc_score
 import xgboost as xgb
 
 # ---------- Page Setup ----------
-
-st.set_page_config(page_title="Fraud Detection Dashboard", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(
+    page_title="Fraud Detection Dashboard",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # ---------- Database Setup ----------
-
 conn = sqlite3.connect("fraud_paysim_sample.db")
 cursor = conn.cursor()
 
-# Create necessary views if they don't exist
+# Create views if they don't exist
 cursor.execute("""
 CREATE VIEW IF NOT EXISTS v_fraud_by_type AS
 SELECT type, COUNT(*) AS count, SUM(amount) AS total_loss
@@ -62,30 +64,29 @@ def get_data():
     return df_type, df_daily, df_top, df_loss, df_full
 
 def plot_fraud_by_type(df_type):
-    st.subheader("Fraud by Transaction Type")
-    fig = px.bar(df_type, x="type", y="count", title="Fraud Counts by Transaction Type")
+    st.subheader("Fraud Distribution by Transaction Type")
+    fig = px.bar(df_type, x="type", y="count", color="type", title="Fraud Count per Type")
     st.plotly_chart(fig, use_container_width=True)
 
 def plot_daily_trends(df_daily):
-    st.subheader("Fraud Trends Over Time")
-    fig = px.line(df_daily, x="step", y="count", title="Daily Fraud Counts")
+    st.subheader("Daily Fraud Trends")
+    fig = px.line(df_daily, x="step", y="count", title="Daily Fraudulent Transactions")
     st.plotly_chart(fig, use_container_width=True)
 
 def plot_loss_by_type(df_loss):
-    st.subheader("Fraud Loss Distribution")
-    fig = px.pie(df_loss, names="type", values="total_loss", title="Fraud Loss by Type")
+    st.subheader("Fraud Loss Analysis")
+    fig = px.pie(df_loss, names="type", values="total_loss", title="Fraud Loss by Transaction Type")
     st.plotly_chart(fig, use_container_width=True)
 
 def plot_top_senders(df_top):
     st.subheader("Top Fraudulent Senders")
-    fig = px.bar(df_top, x="sender", y="total_loss", title="Top 10 Fraudulent Senders by Loss")
+    fig = px.bar(df_top, x="sender", y="total_loss", color="total_loss", title="Top 10 Fraudulent Senders")
     st.plotly_chart(fig, use_container_width=True)
 
 def run_prediction(df_full):
     st.header("Fraud Prediction")
-    st.write("This section allows you to run a machine learning model to predict fraudulent transactions using the XGBoost classifier.")
+    st.markdown("Use the model below to predict fraudulent transactions and analyze key factors influencing fraud.")
 
-    # Prepare data
     X = df_full.drop(columns=["isFraud"])
     y = df_full["isFraud"]
 
@@ -98,7 +99,7 @@ def run_prediction(df_full):
     y_pred = model.predict(X_test)
     auc = roc_auc_score(y_test, y_pred)
 
-    st.success(f"Model trained successfully! ROC AUC Score: {auc:.4f}")
+    st.success(f"Model trained! ROC AUC Score: {auc:.4f}")
 
     importance = model.feature_importances_
     features = X_encoded.columns
@@ -112,43 +113,41 @@ def run_prediction(df_full):
     ax.set_title("Feature Importance")
     st.pyplot(fig)
 
-# ---------- Main Interface ----------
+# ---------- Main App ----------
 
-st.title("📊 Fraud Detection Dashboard")
-st.markdown("Analyze transaction fraud data and predict potential fraudulent activities using machine learning.")
+st.title("🚨 Fraud Detection Dashboard")
+st.markdown("Explore fraud patterns, visualize data insights, and predict fraudulent transactions with advanced tools.")
 
-# Sidebar Navigation
-page = st.sidebar.radio("Go to", ["Dashboard", "Prediction", "Help"])
+# Sidebar navigation
+page = st.sidebar.radio("Navigate", ["Dashboard 📊", "Prediction 🔮", "Help 📖"])
 
 df_type, df_daily, df_top, df_loss, df_full = get_data()
 
-if page == "Dashboard":
+if page == "Dashboard 📊":
     st.header("Dashboard Overview")
     plot_fraud_by_type(df_type)
     plot_daily_trends(df_daily)
     plot_loss_by_type(df_loss)
     plot_top_senders(df_top)
 
-elif page == "Prediction":
+elif page == "Prediction 🔮":
     run_prediction(df_full)
 
-elif page == "Help":
-    st.header("Help & Instructions")
+elif page == "Help 📖":
+    st.header("Help & Guide")
     st.markdown("""
-    ### Welcome to the Fraud Detection Dashboard!
-    This tool helps you visualize transaction data and predict fraud using a machine learning model.
+    ### How to Use the Dashboard
+    - **Dashboard**: Visualize fraud data trends with interactive charts.
+    - **Prediction**: Run a machine learning model to predict fraud and view important features.
+    - **Help**: Learn how the app works and get guidance.
 
-    **Sections Explained:**
-    - **Dashboard**: Explore data insights through interactive charts.
-    - **Prediction**: Run a machine learning model and view important features influencing fraud.
-    - **Help**: Get assistance and understand how to use the application.
-
-    **Note:**
-    - The app uses a SQLite database with predefined views.
-    - Machine learning uses XGBoost classifier with ROC AUC evaluation.
+    ### Notes
+    - The database views are created automatically on startup.
+    - Machine learning is powered by XGBoost, with ROC AUC for evaluation.
+    - The UI is designed to be intuitive, clean, and responsive.
     """)
 
 # Footer
 st.markdown("---")
-st.write("Built with ❤️ using Streamlit, XGBoost, and SQLite.")
+st.write("Built with ❤️ by Akshay using Streamlit, XGBoost, and SQLite.")
 
