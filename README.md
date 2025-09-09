@@ -49,3 +49,12 @@ This project is perfect for data analysts and enthusiasts looking to showcase sk
 ```bash
 git clone https://github.com/USERNAME/fraud-detection-dashboard.git
 cd fraud-detection-dashboard
+
+python -m venv venv
+venv\Scripts\activate  # On Windows
+# OR
+source venv/bin/activate  # On Mac/Linux
+
+pip install -r requirements.txt
+
+streamlit run fraud_dashboard.py
