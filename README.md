@@ -61,7 +61,7 @@ source venv/bin/activate # On Mac/Linux
 pip install -r requirements.txt
 ```
 
-### 2️⃣ Create a virtual environment and install dependencies
+### 3️⃣ Run the Streamlit app
 ```bash
 streamlit run fraud_dashboard.py
 ```
