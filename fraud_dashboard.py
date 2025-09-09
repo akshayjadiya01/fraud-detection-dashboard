@@ -8,9 +8,7 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score, classification_report, confusion_matrix
-import xgboost as xgb
 
 # ---------- Page Setup ----------
 st.set_page_config(
@@ -22,7 +20,6 @@ st.set_page_config(
 # ---------- Database Setup ----------
 DB_FILE = os.path.join(os.path.dirname(__file__), "fraud_paysim_sample.db")
 conn = sqlite3.connect(DB_FILE)
-cursor = conn.cursor()
 
 # ---------- Functions ----------
 @st.cache_data
@@ -35,7 +32,7 @@ def get_data():
     df_daily = load_view("SELECT step, COUNT(*) AS count, SUM(amount) AS total_loss FROM transactions WHERE isFraud=1 GROUP BY step;")
     df_top = load_view("SELECT nameOrig AS sender, COUNT(*) AS count, SUM(amount) AS total_loss FROM transactions WHERE isFraud=1 GROUP BY nameOrig ORDER BY total_loss DESC LIMIT 10;")
     df_loss = load_view("SELECT type, SUM(amount) AS total_loss FROM transactions WHERE isFraud=1 GROUP BY type;")
-    df_full = load_view("SELECT * FROM transactions LIMIT 50000;")  # Sample for cloud
+    df_full = load_view("SELECT * FROM transactions LIMIT 50000;")  # Sample dataset for cloud
     return df_type, df_daily, df_top, df_loss, df_full
 
 # ---------- Visualization Functions ----------
@@ -71,28 +68,27 @@ def plot_top_senders(df_top):
 def load_model():
     model_path = os.path.join(os.path.dirname(__file__), "xgb_model.pkl")
     if os.path.exists(model_path):
-        model = joblib.load(model_path)
-        return model
+        return joblib.load(model_path)
     return None
 
 def run_prediction(df_full):
     st.header("🔮 Fraud Prediction")
     st.markdown("Predict fraudulent transactions using XGBoost model.")
     
+    # Prepare data
     X = df_full.drop(columns=["isFraud"])
     y = df_full["isFraud"]
     X_encoded = pd.get_dummies(X)
 
-    # Load pre-trained model if exists
     model = load_model()
     if model is None:
-        X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, random_state=42)
-        model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
-        model.fit(X_train, y_train)
-        joblib.dump(model, "xgb_model.pkl")
-    else:
-        X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, random_state=42)
-    
+        st.warning("No pre-trained model found. Please train locally and upload `xgb_model.pkl`.")
+        return
+
+    # Sample test set for predictions
+    X_test = X_encoded.sample(n=10000, random_state=42)
+    y_test = y.loc[X_test.index]
+
     y_pred = model.predict(X_test)
     auc = roc_auc_score(y_test, y_pred)
     st.success(f"✅ Model Ready! ROC AUC: {auc:.4f}")
