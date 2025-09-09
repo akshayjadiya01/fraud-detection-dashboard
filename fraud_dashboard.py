@@ -4,11 +4,11 @@ import numpy as np
 import sqlite3
 import plotly.express as px
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score, classification_report, confusion_matrix
 import xgboost as xgb
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 # ---------- Page Setup ----------
 st.set_page_config(
