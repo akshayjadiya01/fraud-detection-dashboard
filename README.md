@@ -10,6 +10,14 @@ Welcome to the **Fraud Detection Dashboard**, an interactive web application tha
 This project demonstrates **data analysis, SQL integration, advanced visualization, and machine learning**, making it perfect for showcasing in your portfolio as a data analyst project.  
 
 ---
+## 🌐 Live Demo
+
+🎯 **Try the Live App Here:**  
+👉 [Fraud Detection Dashboard (Streamlit App)]((https://fraud-detection-dashboard-mqgkbynsv44rc73qcdicxd.streamlit.app))  
+
+> The app is live and fully interactive — explore fraud analytics, visualize trends, and test real-time ML predictions!
+
+---
 
 ## 📊 Features
 
