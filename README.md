@@ -13,7 +13,7 @@ This project demonstrates **data analysis, SQL integration, advanced visualizati
 ## 🌐 Live Demo
 
 🎯 **Try the Live App Here:**  
-👉 [Fraud Detection Dashboard (Streamlit App)]((https://fraud-detection-dashboard-mqgkbynsv44rc73qcdicxd.streamlit.app))  
+👉 [Fraud Detection Dashboard (Streamlit App)](https://fraud-detection-dashboard-mqgkbynsv44rc73qcdicxd.streamlit.app)  
 
 > The app is live and fully interactive — explore fraud analytics, visualize trends, and test real-time ML predictions!
 
